@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101d32">
+<title>Smart Search</title>
+<link rel="manifest" href="manifest.json">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101d32;
+  color: #fff;
+}
+
+header {
+  padding: 24px 18px;
+  background: #172943;
+  text-align: center;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 23px;
+}
+
+header p {
+  color: #a9bbd2;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px 16px;
+}
+
+.section {
+  margin-bottom: 23px;
+}
+
+.section label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #b9cce3;
+}
+
+input, select {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #354963;
+  border-radius: 10px;
+  background: #1b2d45;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #48a6ff;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  border: 1px solid #405773;
+  border-radius: 20px;
+  padding: 10px 14px;
+  color: #d5e3f4;
+  background: #1b2d45;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tag.active {
+  background: #1769aa;
+  border-color: #48a6ff;
+  color: white;
+}
+
+.domain {
+  color: #64c8ff;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.search-btn {
+  width: 100%;
+  padding: 17px;
+  background: #1684dc;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 13px;
+  background: #293d57;
+  color: white;
+  border: 1px solid #405773;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.preview {
+  background: #1b2d45;
+  border: 1px solid #354963;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 22px;
+  overflow-wrap: anywhere;
+}
+
+.preview small {
+  color: #9fb5ce;
+}
+
+#queryOutput {
+  color: #72c9ff;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 9px;
+}
+
+footer {
+  text-align: center;
+  color: #8296ae;
+  padding: 25px;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>SMART SEARCH</h2>
+  <p>Advanced Search & Discovery</p>
+</header>
+
+<div class="container">
+
+  <!-- MAIN SEARCH -->
+  <div class="section">
+    <label>01. MAIN SEARCH</label>
+    <input id="keyword" type="search"
+      placeholder="What are you looking for?">
+  </div>
+
+  <!-- ACTION TAGS -->
+  <div class="section">
+    <label>02. ACTION / TAG BAR</label>
+
+    <div class="tags" id="actions">
+      <button class="tag active" data-value="">Any</button>
+      <button class="tag" data-value="download">Download</button>
+      <button class="tag" data-value="watch">Watch</button>
+      <button class="tag" data-value="listen">Listen</button>
+      <button class="tag" data-value="read">Read</button>
+      <button class="tag" data-value="buy">Buy</button>
+      <button class="tag" data-value="free">Free</button>
+      <button class="tag" data-value="tutorial">Tutorial</button>
+      <button class="tag" data-value="research">Research</button>
+      <button class="tag" data-value="images">Images</button>
+      <button class="tag" data-value="official">Official</button>
+    </div>
+  </div>
+
+  <!-- FORMAT -->
+  <div class="section">
+    <label>03. FILE FORMAT</label>
+
+    <select id="format">
+      <option value="">All formats</option>
+
+      <optgroup label="Images">
+        <option value="jpg">JPG</option>
+        <option value="jpeg">JPEG</option>
+        <option value="png">PNG</option>
+        <option value="gif">GIF</option>
+        <option value="webp">WEBP</option>
+        <option value="svg">SVG</option>
+        <option value="bmp">BMP</option>
+      </optgroup>
+
+      <optgroup label="Audio">
+        <option value="mp3">MP3</option>
+        <option value="wav">WAV</option>
+        <option value="flac">FLAC</option>
+        <option value="m4a">M4A</option>
+      </optgroup>
+
+      <optgroup label="Video">
+        <option value="mp4">MP4</option>
+        <option value="mkv">MKV</option>
+        <option value="avi">AVI</option>
+        <option value="mov">MOV</option>
+        <option value="webm">WEBM</option>
+      </optgroup>
+
+      <optgroup label="Documents">
+        <option value="pdf">PDF</option>
+        <option value="docx">DOCX</option>
+        <option value="doc">DOC</option>
+        <option value="xlsx">XLSX</option>
+        <option value="pptx">PPTX</option>
+        <option value="txt">TXT</option>
+      </optgroup>
+
+      <optgroup label="Other">
+        <option value="zip">ZIP</option>
+        <option value="rar">RAR</option>
+        <option value="apk">APK</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <!-- COUNTRY -->
+  <div class="section">
+    <label>04. ORIGIN / COUNTRY</label>
+
+    <input id="country" list="countries"
+      placeholder="Type a country e.g. Japan">
+
+    <datalist id="countries">
+      <option value="Japan">
+      <option value="Papua New Guinea">
+      <option value="Australia">
+      <option value="United States">
+      <option value="United Kingdom">
+      <option value="China">
+      <option value="India">
+      <option value="Germany">
+      <option value="France">
+      <option value="South Korea">
+      <option value="New Zealand">
+      <option value="Canada">
+      <option value="Italy">
+      <option value="Brazil">
+      <option value="Indonesia">
+      <option value="Philippines">
+      <option value="Singapore">
+      <option value="Malaysia">
+      <option value="South Africa">
+      <option value="Russia">
+      <option value="Thailand">
+      <option value="Vietnam">
+      <option value="Spain">
+      <option value="Netherlands">
+      <option value="Mexico">
+      <option value="Nigeria">
+      <option value="Fiji">
+    </datalist>
+
+    <div class="domain" id="domainOutput">
+      Domain restriction: None
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <button class="search-btn" onclick="searchNow()">
+    SEARCH NOW
+  </button>
+
+  <button class="secondary-btn" onclick="copyQuery()">
+    Copy Search Query
+  </button>
+
+  <button class="secondary-btn" onclick="resetSearch()">
+    Clear All
+  </button>
+
+  <!-- QUERY PREVIEW -->
+  <div class="preview">
+    <small>GENERATED SEARCH QUERY</small>
+    <div id="queryOutput">
+      Your search query will appear here.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  SMART SEARCH ENGINE · HTML APPLICATION
+</footer>
+
+<script>
+
+// COUNTRY TO DOMAIN MAPPING
+const countryDomains = {
+  "japan": ".jp",
+  "papua new guinea": ".pg",
+  "australia": ".au",
+  "united states": ".us",
+  "united kingdom": ".uk",
+  "china": ".cn",
+  "india": ".in",
+  "germany": ".de",
+  "france": ".fr",
+  "south korea": ".kr",
+  "new zealand": ".nz",
+  "canada": ".ca",
+  "italy": ".it",
+  "brazil": ".br",
+  "indonesia": ".id",
+  "philippines": ".ph",
+  "singapore": ".sg",
+  "malaysia": ".my",
+  "south africa": ".za",
+  "russia": ".ru",
+  "thailand": ".th",
+  "vietnam": ".vn",
+  "spain": ".es",
+  "netherlands": ".nl",
+  "mexico": ".mx",
+  "nigeria": ".ng",
+  "fiji": ".fj"
+};
+
+let selectedAction = "";
+
+// ACTION SELECTION
+document.querySelectorAll(".tag").forEach(tag => {
+  tag.addEventListener("click", () => {
+    document.querySelectorAll(".tag")
+      .forEach(t => t.classList.remove("active"));
+
+    tag.classList.add("active");
+    selectedAction = tag.dataset.value;
+    updateQuery();
+  });
+});
+
+// COUNTRY DETECTION
+const countryInput = document.getElementById("country");
+
+function getDomain() {
+  let name = countryInput.value.trim().toLowerCase();
+  return countryDomains[name] || "";
+}
+
+countryInput.addEventListener("input", updateQuery);
+
+// UPDATE PREVIEW
+document.getElementById("keyword")
+  .addEventListener("input", updateQuery);
+
+document.getElementById("format")
+  .addEventListener("change", updateQuery);
+
+function buildQuery() {
+
+  let keyword = document.getElementById("keyword")
+    .value.trim();
+
+  let format = document.getElementById("format").value;
+
+  let query = [];
+
+  if (keyword) query.push(keyword);
+
+  if (selectedAction) query.push(selectedAction);
+
+  if (format) query.push("filetype:" + format);
+
+  let domain = getDomain();
+
+  if (domain) query.push("site:" + domain);
+
+  return query.join(" ");
+}
+
+function updateQuery() {
+
+  let domain = getDomain();
+
+  document.getElementById("domainOutput").textContent =
+    domain
+    ? "Domain restriction: site:" + domain
+    : "Domain restriction: None";
+
+  document.getElementById("queryOutput").textContent =
+    buildQuery() || "Your search query will appear here.";
+}
+
+// SEARCH ENGINE
+function searchNow() {
+
+  let query = buildQuery();
+
+  if (!query) {
+    alert("Enter something to search for.");
+    return;
+  }
+
+  let url = "https://www.google.com/search?q=" +
+    encodeURIComponent(query);
+
+  window.open(url, "_blank");
+}
+
+// COPY QUERY
+function copyQuery() {
+
+  let query = buildQuery();
+
+  if (!query) {
+    alert("Nothing to copy.");
+    return;
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(query)
+      .then(() => alert("Search query copied!"))
+      .catch(() => alert("Copy unavailable. Select the query manually."));
+  } else {
+    alert("Copy requires a secure browser context.");
+  }
+}
+
+// RESET
+function resetSearch() {
+
+  document.getElementById("keyword").value = "";
+  document.getElementById("format").value = "";
+  document.getElementById("country").value = "";
+
+  selectedAction = "";
+
+  document.querySelectorAll(".tag")
+    .forEach(t => t.classList.remove("active"));
+
+  document.querySelector('[data-value=""]')
+    .classList.add("active");
+
+  updateQuery();
+}
+
+updateQuery();
+
+// SERVICE WORKER
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js")
+    .catch(error => console.log("Offline cache unavailable", error));
+}
+
+</script>
+
+</body>
+</html>
